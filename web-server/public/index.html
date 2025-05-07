@@ -1,52 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
 	<head>
-		<title>Bluetooth Arduino Dashboard</title>
-		<style>
-			body { font-family: sans-serif; text-align: center; padding: 2rem; }
-			#output { font-size: 2rem; color: #0af; }
-			#light-controller { display: flex; justify-content: center; margin-top: 100px; }
-		</style>
+		<title>arduino-websocket-bridge | GodXero</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+		<link rel="shortcut icon" href="res/img/favicon.png" type="image/x-icon">
+		<link rel="stylesheet" href="css/main.css">
+		<script type="text/javascript" src="js/sketch.js" defer></script>
 	</head>
 	<body>
-		<h1>Arduino says:</h1>
-		<div id="output">Waiting...</div>
+		<main id="main-container">
+			<div id="header">
+				<h1>Arduino Websocket Bridge by GodXero</h1>
+				<h2>Link up and take control.</h2>
+			</div>
 
-		<div id="light-controller">
-			<p>Turn light On / Off</p>
-			<input type="checkbox" id="light-state">
-		</div>
+			<div id="content">
+				<table id="controller-table">
+					<tbody>
+						<tr>
+							<td>Red Light</td>
+							<td>
+								<input type="checkbox" id="red-light-toggle">
+							</td>
+						</tr>
+						<tr>
+							<td>Green Light</td>
+							<td>
+								<input type="checkbox" id="green-light-toggle">
+							</td>
+						</tr>
+						<tr>
+							<td>Blue Light</td>
+							<td>
+								<input type="checkbox" id="blue-light-toggle">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 
-		<script>
-			const socket = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
-			const lightCheckbox = document.getElementById('light-state');
-			let initialized = false;
+			<div id="footer">
+				<hr>
+				<br>
+				<p>&copy; 2025 GodXero. All rights reserved.</p>
+				<p>
+					<a href="https://github.com/GodXero33" target="_blank" rel="noopener noreferrer">GitHub</a>
+				</p>
+			</div>
+			<!-- <h1>Arduino says:</h1>
+			<div id="output">Waiting...</div>
 
-			socket.onmessage = (event) => {
-				const data = JSON.parse(event.data);
-
-				if (typeof data.status === 'boolean') {
-					lightCheckbox.checked = data.status;
-					initialized = true;
-				}
-			}
-
-			socket.onopen = () => {
-				document.getElementById('output').textContent = 'Connected';
-
-				lightCheckbox.addEventListener('change', () => {
-					const status = lightCheckbox.checked;
-					lightCheckbox.checked = !status;
-
-					if (!initialized) return;
-
-					socket.send(JSON.stringify({ status }));
-				});
-			};
-
-			socket.onerror = (err) => {
-				document.getElementById('output').textContent = 'Connection error. Refresh the page.';
-			};
-		</script>
+			<div id="light-controller">
+				<p>Turn light On / Off</p>
+				<input type="checkbox" id="light-state">
+			</div> -->
+		</main>
 	</body>
 </html>

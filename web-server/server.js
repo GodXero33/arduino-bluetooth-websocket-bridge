@@ -12,7 +12,7 @@ const serial = new SerialPort({ path: 'COM4', baudRate: 9600 });
 const parser = serial.pipe(new ReadlineParser({ delimiter: '\n' }));
 
 const clients = [];
-let isLightOn = false;
+let lights = [];
 
 app.use(express.static('public'));
 
@@ -38,14 +38,13 @@ wss.on('connection', (ws, req) => {
 	console.log(`New WebSocket client connected from IP: ${ip}`);
 	clients.push(ws);
 
-	ws.send(JSON.stringify({ status: isLightOn }));
+	ws.send(JSON.stringify({ lights }));
 
 	ws.on('message', event => {
 		const data = JSON.parse(event);
+		lights = data.lights;
 
-		isLightOn = data.status;
-
-		serial.write(isLightOn ? 'ON\n' : 'OFF\n');
+		serial.write(lights.map((val, index) => `L${index}|V${val}`).join('\n') + '\n');
 
 		const stringifyData = JSON.stringify(data);
 
