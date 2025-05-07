@@ -32,8 +32,10 @@ serial.on('open', () => console.log('Serial Port Open'));
 
 wss.on('connection', (ws, req) => {
 	// const ip = req.socket.remoteAddress;
+	const forwardedFor = req.headers['x-forwarded-for']; // Get IP from x-forwarded-for header (Ngrok or other proxies)
+	const ip = forwardedFor ? forwardedFor.split(',')[0] : req.socket.remoteAddress;
 
-	console.log(`New WebSocket client connected`);
+	console.log(`New WebSocket client connected from IP: ${ip}`);
 	clients.push(ws);
 
 	ws.send(JSON.stringify({ status: isLightOn }));
