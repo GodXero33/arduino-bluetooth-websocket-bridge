@@ -18,7 +18,7 @@
 		</div>
 
 		<script>
-			const socket = new WebSocket('ws://localhost:8080');
+			const socket = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
 			const lightCheckbox = document.getElementById('light-state');
 			let initialized = false;
 
