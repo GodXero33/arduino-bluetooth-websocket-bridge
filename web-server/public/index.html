@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bluetooth Arduino Dashboard</title>
+		<style>
+			body { font-family: sans-serif; text-align: center; padding: 2rem; }
+			#output { font-size: 2rem; color: #0af; }
+			#light-controller { display: flex; justify-content: center; margin-top: 100px; }
+		</style>
+	</head>
+	<body>
+		<h1>Arduino says:</h1>
+		<div id="output">Waiting...</div>
+
+		<div id="light-controller">
+			<p>Turn light On / Off</p>
+			<input type="checkbox" id="light-state">
+		</div>
+
+		<script>
+			const socket = new WebSocket('ws://localhost:8080');
+			const lightCheckbox = document.getElementById('light-state');
+			let initialized = false;
+
+			socket.onmessage = (event) => {
+				const data = JSON.parse(event.data);
+
+				if (typeof data.status === 'boolean') {
+					lightCheckbox.checked = data.status;
+					initialized = true;
+				}
+			}
+
+			socket.onopen = () => {
+				document.getElementById('output').textContent = 'Connected';
+
+				lightCheckbox.addEventListener('change', () => {
+					const status = lightCheckbox.checked;
+					lightCheckbox.checked = !status;
+
+					if (!initialized) return;
+
+					socket.send(JSON.stringify({ status }));
+				});
+			};
+
+			socket.onerror = (err) => {
+				document.getElementById('output').textContent = 'Connection error. Refresh the page.';
+			};
+		</script>
+	</body>
+</html>
