@@ -7,6 +7,4 @@ The main goal of this project is to enhance my understanding of how software and
 ## Key Features
 
 - Real-time two-way communication between Arduino and web via WebSockets.
-- Bluetooth-based communication between Arduino and server.
-- Extensible design for various hardware projects and web interfaces.
 - Built with Node.js and Arduino to learn cross-platform integration and communication.
